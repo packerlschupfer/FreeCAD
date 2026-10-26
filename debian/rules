@@ -1,0 +1,60 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DH_VERBOSE = 1
+
+# Opt-in LTO performance build: `DEB_BUILD_OPTIONS=lto dpkg-buildpackage -b`.
+# Default (unset) = standard reproducible build (matches cadix). Appended via
+# *_MAINT_APPEND so hardening flags are preserved. -ffat-lto-objects avoids
+# mixed-object link errors with the in-tree static libs (E57/GSL).
+#
+# FREECAD_LTO_JOBS = parallel link-time (LTRANS) jobs — the memory lever.
+# Each stream holds a program partition; more = faster link but more peak RAM.
+# Tune to the BUILD HOST, not the target. Resolution order:
+#   1. explicit env  FREECAD_LTO_JOBS=N   (in-tree dpkg-buildpackage)
+#   2. DEB_BUILD_OPTIONS parallel=N        (set by `sbuild -j N`; crosses the chroot)
+#   3. default 6                           (safe floor for the 31G/ARC-capped box)
+# Guidance: workstation (~19G free) -> 6 (peaks ~14G); cadix (64G/16c) -> 12.
+DEB_PARALLEL := $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+FREECAD_LTO_JOBS ?= $(or $(DEB_PARALLEL),6)
+ifneq (,$(filter lto,$(DEB_BUILD_OPTIONS)))
+export DEB_CFLAGS_MAINT_APPEND   = -flto=$(FREECAD_LTO_JOBS) -ffat-lto-objects
+export DEB_CXXFLAGS_MAINT_APPEND = -flto=$(FREECAD_LTO_JOBS) -ffat-lto-objects
+export DEB_LDFLAGS_MAINT_APPEND  = -flto=$(FREECAD_LTO_JOBS)
+endif
+
+%:
+	dh $@ --buildsystem=cmake
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_DATADIR=/usr/share/freecad \
+		-DCMAKE_INSTALL_LIBDIR=/usr/lib/freecad \
+		-DCMAKE_INSTALL_DOCDIR=/usr/share/doc/freecad-daily \
+		-DBUILD_QT5=ON \
+		-DBUILD_GUI=ON \
+		-DBUILD_FEM=ON \
+		-DBUILD_ASSEMBLY=ON \
+		-DFREECAD_USE_PYBIND11=ON \
+		-DFREECAD_USE_CCACHE=ON \
+		-DPYTHON_EXECUTABLE=/usr/bin/python3
+
+# Skip tests for now - some GUI tests fail without display
+override_dh_auto_test:
+
+# freecad-daily is a runtime package. The bundled 3rd-party libs (googletest,
+# OndselSolver, libE57Format) leak their dev headers into /usr/include, which
+# collide with the system -dev packages (libgtest-dev, libgmock-dev,
+# libondselsolver-dev) and force `dpkg --force-overwrite` on install. None are
+# needed to RUN FreeCAD, so strip them from the staging tree after install.
+# (Loop over both possible destdirs so it works regardless of debhelper's
+# single-package vs debian/tmp layout choice.)
+override_dh_auto_install:
+	dh_auto_install
+	for d in debian/tmp debian/freecad-daily; do \
+	  rm -rf $$d/usr/include/gtest $$d/usr/include/gmock \
+	         $$d/usr/include/OndselSolver $$d/usr/include/E57Format; \
+	  rmdir --ignore-fail-on-non-empty $$d/usr/include 2>/dev/null || true; \
+	done

@@ -70,3 +70,13 @@ files_to_translate.txt
 # pixi environments
 .pixi
 *.egg-info
+# Debian packaging build output
+/obj-*/
+/debian-hin/
+/debian/freecad-daily/
+/debian/.debhelper/
+/debian/debhelper-build-stamp
+/debian/files
+/debian/*.debhelper.log
+/debian/*.substvars
+/debian/*.debhelper

@@ -1,0 +1,32 @@
+freecad-daily (1.1.3~git20260808) unstable; urgency=medium
+
+  * Clean build @ cefbb82d95: version now matches 1.1.3 source; header-
+    strip (installs without --force-overwrite), Qt5 QGIProjGroup
+    emplace_back fix, full 64 Build-Depends; LTO (-flto=12 via
+    DEB_BUILD_OPTIONS=lto)
+
+ -- Helmut Adrigan <mrnice@localhost.localdomain>  Sat, 08 Aug 2026 12:10:29 +0200
+
+freecad-daily (1.1.1~git20260802) unstable; urgency=medium
+
+  * Add libfmt-dev + libyaml-cpp-dev to Build-Depends (clean-chroot
+    sbuild fix, per cadix brief 2026-08-02); update to releases/FreeCAD-
+    1-1 @ cefbb82d95 (+70 commits)
+  * Add remaining clean-chroot Build-Depends (Round 2, per cadix brief):
+    pybind11-dev, libmedc-dev, libfreetype-dev, libmetis-dev, boost
+    python/date-time/graph/iostreams/serialization, libocct-data-
+    exchange-dev, nlohmann-json3-dev, libmsgsl-dev, libdouble-
+    conversion-dev, liblz4-dev, libgl-dev, libglew-dev, libgts-bin,
+    libkdtree++-dev, cmake-extras, pyqt5-dev-tools, python3-
+    pyside2.qtuitools
+
+ -- Helmut Adrigan <mrnice@localhost.localdomain>  Sun, 02 Aug 2026 11:42:10 +0200
+
+freecad-daily (1.1.1~git20260625) unstable; urgency=medium
+
+  * Initial release.
+  * Rebuild from releases/FreeCAD-1-1 @ a37f23864e (build 44921); 183
+    commits past prior snapshot; built against Coin3D 4.0.7 (Wayland GL
+    fix)
+
+ -- Helmut Adrigan <mrnice@localhost.localdomain>  Thu, 25 Jun 2026 19:28:25 +0200
