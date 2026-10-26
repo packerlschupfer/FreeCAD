@@ -1,3 +1,11 @@
+freecad-daily (1.1.4~git20261026) unstable; urgency=medium
+
+  * Rebuild @ 4fd3bf320d (upstream v1.1.4, 49 commits since cefbb82d95);
+    Qt5 QGIProjGroup emplace_back fix still carried; LTO via
+    DEB_BUILD_OPTIONS=lto
+
+ -- Helmut Adrigan <mrnice@localhost.localdomain>  Mon, 26 Oct 2026 01:00:59 +0100
+
 freecad-daily (1.1.3~git20260808) unstable; urgency=medium
 
   * Clean build @ cefbb82d95: version now matches 1.1.3 source; header-
