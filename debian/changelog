@@ -1,3 +1,13 @@
+freecad-daily (1.1.4~git20261026.1) unstable; urgency=medium
+
+  * Build with dh-sequence-python3 so ${python3:Depends} is filled
+    (lintian python3-depends-but-no-python3-helper)
+  * Depend on python3-pyside2.{qtnetwork,qtuitools,qtxml}, python3-ply,
+    python3-yaml; Recommend the qtweb* modules (match Debian freecad).
+    Missing qtnetwork broke the Addon Manager.
+
+ -- Helmut Adrigan <mrnice@localhost.localdomain>  Mon, 26 Oct 2026 01:27:08 +0100
+
 freecad-daily (1.1.4~git20261026) unstable; urgency=medium
 
   * Rebuild @ 4fd3bf320d (upstream v1.1.4, 49 commits since cefbb82d95);

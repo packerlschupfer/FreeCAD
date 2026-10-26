@@ -5,6 +5,7 @@ Maintainer: Helmut Adrigan <mrnice@localhost.localdomain>
 Rules-Requires-Root: no
 Build-Depends:
  debhelper-compat (= 13),
+ dh-sequence-python3,
  cmake,
  cmake-extras,
  libboost-date-time-dev,
@@ -79,10 +80,20 @@ Depends:
  ${python3:Depends},
  python3-matplotlib,
  python3-pivy,
+ python3-ply,
  python3-pyside2.qtcore,
  python3-pyside2.qtgui,
+ python3-pyside2.qtnetwork,
  python3-pyside2.qtsvg,
+ python3-pyside2.qtuitools,
  python3-pyside2.qtwidgets,
+ python3-pyside2.qtxml,
+ python3-yaml,
+Recommends:
+ python3-pyside2.qtwebchannel,
+ python3-pyside2.qtwebengine,
+ python3-pyside2.qtwebenginecore,
+ python3-pyside2.qtwebenginewidgets,
 Conflicts: freecad
 Provides: freecad
 Replaces: freecad
